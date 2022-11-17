@@ -19,12 +19,28 @@ export function CardList({ cards }: CardsProps): JSX.Element {
   // TODO MODAL USEDISCLOSURE
 
   // TODO SELECTED IMAGE URL STATE
+  const [selectedImage, setSelectedImage] = useState('')
 
   // TODO FUNCTION HANDLE VIEW IMAGE
 
+
   return (
     <>
-      {/* TODO CARD GRID */}
+      {<SimpleGrid columns={3} spacing={'40px'}>
+          {cards.map(item => {
+            return (
+              <Card
+              key={item.id}
+              data={{
+                ...item,
+                url: item.url  
+              }}
+              viewImage={() => '' }
+              />
+            )
+          })}
+        
+      </SimpleGrid>}
 
       {/* TODO MODALVIEWIMAGE */}
     </>
