@@ -18,16 +18,38 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
 
   const formValidations = {
     image: {
-      // TODO REQUIRED, LESS THAN 10 MB AND ACCEPTED FORMATS VALIDATIONS
-    },
-    title: {
-      // TODO REQUIRED, MIN AND MAX LENGTH VALIDATIONS
-    },
-    description: {
-      // TODO REQUIRED, MAX LENGTH VALIDATIONS
-    },
-  };
+      required: {value: true, message: "Arquivo Obrigatório"},
+      validate: {
+        lessThan10MB: v => { 
+          if (parseInt(v.size) < 10){
+            return "O arquivo deve ser menor que 10MB" 
+          }
+          return true
+        }, 
 
+        acceptedFormats: v => {
+          const regex = new RegExp(
+            /([a-zA-Z0-9\s_\\.\-():])+(.png|.jpeg|.gif)$/
+          );
+          if (!regex.test(v[0].type)) {
+            return 'Somente são aceitos arquivos PNG, JPEG e GIF';
+          }
+          return true;
+        },
+        
+        }
+      },    
+    title: {
+      required: {value: true, message: "Arquivo Obrigatório"},
+      min: {value: 2, message: "Mínimo de 2 caracteres"},
+      max: {value: 10, message: "Máximo de 20 caracteres"},
+     },
+    description: {
+      required: {value:"true", message:"Descrição obrigatória"}
+      maxLength: {value:65, message:"Máximo de 65 caracteres"}
+      },
+    }
+    
   const queryClient = useQueryClient();
   const mutation = useMutation(
     // TODO MUTATION API POST REQUEST,
@@ -66,21 +88,21 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
           localImageUrl={localImageUrl}
           setLocalImageUrl={setLocalImageUrl}
           setError={setError}
-          trigger={trigger}
-          // TODO SEND IMAGE ERRORS
-          // TODO REGISTER IMAGE INPUT WITH VALIDATIONS
+          trigger={trigger}          
+          {...register('file', formValidations.image)}
+          error={errors.file}
         />
 
         <TextInput
-          placeholder="Título da imagem..."
-          // TODO SEND TITLE ERRORS
-          // TODO REGISTER TITLE INPUT WITH VALIDATIONS
+          placeholder="Título da imagem..."          
+          {...register('title', formValidations.title)}
+          error={errors.title}
         />
 
         <TextInput
-          placeholder="Descrição da imagem..."
-          // TODO SEND DESCRIPTION ERRORS
-          // TODO REGISTER DESCRIPTION INPUT WITH VALIDATIONS
+          placeholder="Descrição da imagem..."          
+          {...register('description', formValidations.description)}
+          error={errors.description}
         />
       </Stack>
 
